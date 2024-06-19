@@ -1,3 +1,6 @@
+# I don't know javascript, so I wrote this in python to have ChatGPT convert it's logic to javascript
+# in order to get the project going
+
 import requests
 import json
 
