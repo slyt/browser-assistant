@@ -1,8 +1,17 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #121212; /* Dark background color */
+  color: #e0e0e0; /* Light text color */
+}
+
 #chat-container {
-  width: 300px;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #1e1e1e; /* Dark background color for the chat container */
+  border: 1px solid #333; /* Border color */
 }
 
 #messages {
@@ -10,16 +19,47 @@
   overflow-y: auto;
   padding: 10px;
   user-select: text; /* Ensures text is selectable */
+  background-color: #1e1e1e; /* Same background color for consistency */
+  color: #e0e0e0; /* Light text color */
 }
 
 #user-input {
-  width: calc(100% - 50px);
+  width: calc(100% - 60px);
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #333; /* Dark background for input */
+  color: #e0e0e0; /* Light text color for input */
+}
+
+#user-input::placeholder {
+  color: #888; /* Light placeholder color */
 }
 
 #send-button {
   width: 50px;
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #333; /* Dark background for button */
+  color: #e0e0e0; /* Light text color for button */
+  cursor: pointer;
+}
+
+#send-button:hover {
+  background-color: #555; /* Slightly lighter background on hover */
 }
 
 #messages div {
-  user-select: text; /* Ensures text is selectable */
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #2e2e2e; /* Slightly lighter background for messages */
+  color: #e0e0e0; /* Light text color for messages */
+}
+
+#messages div:nth-child(odd) {
+  background-color: #3e3e3e; /* Alternate background color for messages */
 }
