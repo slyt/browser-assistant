@@ -14,6 +14,10 @@ An AI browser assistent addon for Firefox that can read the text on the screen a
 Load the Extension in Firefox:
 
 1. Install Firefox Developer Edition
-2. Open Firefox and navigate to about:debugging.
+2. Open Firefox and navigate to `about:debugging`
 3. Click on "This Firefox" on the left hand side and then "Load Temporary Add-on".
 4. Select the `manifest.json` file from your extension directory.
+
+## Ollama
+
+Be sure to set `OLLAMA_ORIGINS=*` environment variable. See "[how do I configure Ollama server?](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server)"
