@@ -6,10 +6,13 @@ document.getElementById('user-input').addEventListener('keydown', (event) => {
   }
 });
 
+let chatHistory = [];
+
 async function sendMessage() {
   const userInput = document.getElementById('user-input').value;
   if (userInput) {
     displayMessage('User', userInput);
+    chatHistory.push({ role: 'user', content: userInput });
     await getResponseFromLLM(userInput);
     document.getElementById('user-input').value = '';
   }
@@ -27,16 +30,16 @@ async function getResponseFromLLM(prompt) {
   const llmServer = document.getElementById('llmServer').value;
   const model = document.getElementById('model').value;
   const responseType = document.getElementById('responseType').value;
-  const generateEndpoint = "/api/generate";
+  const chatEndpoint = "/api/chat";
 
   const parameters = {
     model: model,
-    prompt: prompt,
+    messages: chatHistory,
     stream: responseType === 'streaming'
   };
 
   try {
-    const response = await fetch(llmServer + generateEndpoint, {
+    const response = await fetch(llmServer + chatEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -63,7 +66,7 @@ async function getResponseFromLLM(prompt) {
           if (line.trim()) {
             try {
               const parsedLine = JSON.parse(line);
-              appendResponseChunk(parsedLine.response);
+              appendResponseChunk(parsedLine.message.content);
             } catch (error) {
               console.error('Error parsing JSON:', line, error);
             }
@@ -88,8 +91,9 @@ async function getResponseFromLLM(prompt) {
       }
 
       console.log('LLM Response:', result);
-      displayMessage('Bot', result.response);
-      return result.response;
+      chatHistory.push({ role: 'assistant', content: result.message.content });
+      displayMessage('Bot', result.message.content);
+      return result.message.content;
     }
   } catch (error) {
     console.error('Error:', error);
@@ -115,4 +119,5 @@ function appendResponseChunk(chunk) {
 
 function clearOutput() {
   document.getElementById('messages').innerHTML = '';
+  chatHistory = [];
 }
