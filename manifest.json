@@ -1,0 +1,29 @@
+{
+    "manifest_version": 2,
+    "name": "Page Reader & Chatbot",
+    "version": "1.0",
+    "description": "Reads the text on the current page and answers questions using a locally hosted LLM.",
+    "permissions": [
+      "activeTab",
+      "storage",
+      "http://*/",
+      "https://*/"
+    ],
+    "sidebar_action": {
+      "default_panel": "sidebar/sidebar.html",
+      "default_icon": {
+        "48": "icons/icon-48.png"
+      },
+      "default_title": "Page Reader & Chatbot"
+    },
+    "background": {
+      "scripts": ["background.js"]
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content_script.js"]
+      }
+    ]
+  }
+  
