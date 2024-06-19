@@ -1,8 +1,8 @@
 document.getElementById('send-button').addEventListener('click', async () => {
   const userInput = document.getElementById('user-input').value;
   if (userInput) {
-    const response = await getResponseFromLLM(userInput);
     displayMessage('User', userInput);
+    const response = await getResponseFromLLM(userInput);
     displayMessage('Bot', response);
     document.getElementById('user-input').value = '';
   }
@@ -37,31 +37,51 @@ async function getResponseFromLLM(prompt) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(`Error: ${errorData}`);
+      console.error('Server Error:', errorData);
+      throw new Error(`Server Error: ${errorData.message}`);
     }
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let result = '';
+    let done = false;
 
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
+    while (!done) {
+      const { value, done: readerDone } = await reader.read();
+      if (readerDone) break;
       result += decoder.decode(value, { stream: true });
 
-      // Attempt to parse the streaming response
-      try {
-        const partial = JSON.parse(result);
-        displayMessage('Bot', partial.response);
-      } catch (e) {
-        // If parsing fails, continue reading
-        continue;
+      const lines = result.split('\n');
+      for (let i = 0; i < lines.length - 1; i++) {
+        if (lines[i].trim()) {
+          const partial = JSON.parse(lines[i]);
+          if (partial.response) {
+            appendResponseChunk(partial.response);
+          }
+          done = partial.done;
+        }
       }
+      result = lines[lines.length - 1];
     }
 
-    return result;
+    return 'Response complete.';
   } catch (error) {
     console.error('Error:', error);
     return 'An error occurred while communicating with the LLM server.';
   }
+}
+
+function appendResponseChunk(chunk) {
+  const messagesContainer = document.getElementById('messages');
+  const lastMessage = messagesContainer.lastChild;
+
+  if (lastMessage && lastMessage.textContent.startsWith('Bot:')) {
+    lastMessage.textContent += chunk;
+  } else {
+    const messageElement = document.createElement('div');
+    messageElement.textContent = `Bot: ${chunk}`;
+    messagesContainer.appendChild(messageElement);
+  }
+
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
