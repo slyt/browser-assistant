@@ -1,15 +1,16 @@
 document.getElementById('send-button').addEventListener('click', sendMessage);
+document.getElementById('clear-button').addEventListener('click', clearOutput);
 document.getElementById('user-input').addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
     sendMessage();
   }
 });
 
-function sendMessage() {
+async function sendMessage() {
   const userInput = document.getElementById('user-input').value;
   if (userInput) {
     displayMessage('User', userInput);
-    getResponseFromLLM(userInput);
+    await getResponseFromLLM(userInput);
     document.getElementById('user-input').value = '';
   }
 }
@@ -23,13 +24,15 @@ function displayMessage(sender, message) {
 }
 
 async function getResponseFromLLM(prompt) {
-  const llmServer = "http://localhost:11434";
+  const llmServer = document.getElementById('llmServer').value;
+  const model = document.getElementById('model').value;
+  const responseType = document.getElementById('responseType').value;
   const generateEndpoint = "/api/generate";
 
   const parameters = {
-    model: "phi3",
+    model: model,
     prompt: prompt,
-    stream: true
+    stream: responseType === 'streaming'
   };
 
   try {
@@ -41,38 +44,56 @@ async function getResponseFromLLM(prompt) {
       body: JSON.stringify(parameters)
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Server Error:', errorData);
-      throw new Error(`Server Error: ${errorData.message}`);
-    }
+    if (responseType === 'streaming') {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let resultText = '';
+      let done = false;
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let result = '';
-    let done = false;
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+        const chunk = decoder.decode(value, { stream: !readerDone });
+        resultText += chunk;
 
-    while (!done) {
-      const { value, done: readerDone } = await reader.read();
-      if (readerDone) break;
-      result += decoder.decode(value, { stream: true });
+        const lines = resultText.split('\n');
+        resultText = lines.pop(); // Keep the last incomplete line
 
-      const lines = result.split('\n');
-      for (let i = 0; i < lines.length - 1; i++) {
-        if (lines[i].trim()) {
-          const partial = JSON.parse(lines[i]);
-          if (partial.response) {
-            appendResponseChunk(partial.response);
+        for (const line of lines) {
+          if (line.trim()) {
+            try {
+              const parsedLine = JSON.parse(line);
+              appendResponseChunk(parsedLine.response);
+            } catch (error) {
+              console.error('Error parsing JSON:', line, error);
+            }
           }
-          done = partial.done;
         }
       }
-      result = lines[lines.length - 1];
-    }
+    } else {
+      const text = await response.text();
+      console.log('Raw Server Response:', text);  // Log the raw response text
 
-    return 'Response complete.';
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (error) {
+        console.error('Response is not valid JSON:', text);
+        throw new Error('Server response is not valid JSON');
+      }
+
+      if (!response.ok) {
+        console.error('Server Error:', result);
+        throw new Error(`Server Error: ${result.message}`);
+      }
+
+      console.log('LLM Response:', result);
+      displayMessage('Bot', result.response);
+      return result.response;
+    }
   } catch (error) {
     console.error('Error:', error);
+    displayMessage('Bot', `An error occurred: ${error.message}`);
     return 'An error occurred while communicating with the LLM server.';
   }
 }
@@ -90,4 +111,8 @@ function appendResponseChunk(chunk) {
   }
 
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function clearOutput() {
+  document.getElementById('messages').innerHTML = '';
 }

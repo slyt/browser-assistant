@@ -6,7 +6,7 @@ body {
 }
 
 #chat-container {
-  width: 100%;
+  width: 100%; /* Full width */
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -23,10 +23,19 @@ body {
   color: #e0e0e0; /* Light text color */
 }
 
+#input-container {
+  display: flex;
+  justify-content: center; /* Center the input box and button horizontally */
+  align-items: center;
+  padding: 5px;
+  background-color: #1e1e1e; /* Same background color for consistency */
+}
+
 #user-input {
-  width: calc(100% - 60px);
+  flex-grow: 1;
+  max-width: 200px; /* Set a maximum width for the input */
   padding: 10px;
-  margin: 5px;
+  margin-right: 5px;
   border: none;
   border-radius: 5px;
   background-color: #333; /* Dark background for input */
@@ -37,10 +46,8 @@ body {
   color: #888; /* Light placeholder color */
 }
 
-#send-button {
-  width: 50px;
+#send-button, #clear-button {
   padding: 10px;
-  margin: 5px;
   border: none;
   border-radius: 5px;
   background-color: #333; /* Dark background for button */
@@ -48,7 +55,7 @@ body {
   cursor: pointer;
 }
 
-#send-button:hover {
+#send-button:hover, #clear-button:hover {
   background-color: #555; /* Slightly lighter background on hover */
 }
 

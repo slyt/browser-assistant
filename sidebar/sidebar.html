@@ -5,9 +5,28 @@
 </head>
 <body>
   <div id="chat-container">
+    <h1>LLM Chat Interface</h1>
+    
+    <label for="llmServer">LLM Server URL:</label>
+    <input type="text" id="llmServer" name="llmServer" value="http://localhost:11434"><br><br>
+    
+    <label for="model">Model:</label>
+    <input type="text" id="model" name="model" value="phi3"><br><br>
+    
+    <label for="responseType">Response Type:</label>
+    <select id="responseType" name="responseType">
+      <option value="streaming">Streaming</option>
+      <option value="non-streaming">Non-Streaming</option>
+    </select><br><br>
+    
     <div id="messages"></div>
-    <input type="text" id="user-input" placeholder="Ask a question...">
-    <button id="send-button">Send</button>
+    
+    <div id="input-container">
+      <input type="text" id="user-input" placeholder="Ask a question...">
+      <button id="send-button">Send</button>
+    </div>
+    
+    <button id="clear-button">Clear Text</button>
   </div>
   <script src="sidebar.js"></script>
 </body>
