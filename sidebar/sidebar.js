@@ -8,6 +8,20 @@ document.getElementById('user-input').addEventListener('keydown', (event) => {
 
 let chatHistory = [];
 
+async function getPageContent() {
+  return new Promise((resolve, reject) => {
+    browser.tabs.query({active: true, currentWindow: true}, tabs => {
+      browser.tabs.sendMessage(tabs[0].id, {action: "getPageContent"}, response => {
+        if (response && response.content) {
+          resolve(response.content);
+        } else {
+          reject('Failed to get page content');
+        }
+      });
+    });
+  });
+}
+
 async function sendMessage() {
   const userInput = document.getElementById('user-input').value;
   if (userInput) {
@@ -26,15 +40,19 @@ function displayMessage(sender, message) {
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-async function getResponseFromLLM(prompt) {
+async function getResponseFromLLM(userPrompt) {
+  const pageContent = await getPageContent(); // Get the scraped content
+  const fullPrompt = pageContent + '\n\n' + userPrompt; // Prepend it to the user's prompt
+
+  console.log('Full prompt:', fullPrompt); // Log the full prompt
+  // The rest of your existing code to send `fullPrompt` to the LLM server
   const llmServer = document.getElementById('llmServer').value;
   const model = document.getElementById('model').value;
   const responseType = document.getElementById('responseType').value;
   const chatEndpoint = "/api/chat";
-
   const parameters = {
     model: model,
-    messages: chatHistory,
+    messages: [{role: 'system', content:"You are an LLM assitent in a Firefox extention. You answer questions about content on the page."}, {role: 'user', content: fullPrompt} ], // Use fullPrompt here
     stream: responseType === 'streaming'
   };
 

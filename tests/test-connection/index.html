@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Connection</title>
+</head>
+<body>
+  <h1>Test Connection to LLM Server</h1>
+  <label for="llmServer">LLM Server URL:</label>
+  <input type="text" id="llmServer" name="llmServer" value="http://localhost:11434"><br><br>
+  
+  <label for="model">Model:</label>
+  <input type="text" id="model" name="model" value="phi3"><br><br>
+  
+  <label for="prompt">Prompt:</label>
+  <textarea id="prompt" name="prompt" rows="10" cols="50">Why is the sky blue? Answer in one concise sentence.</textarea><br><br>
+  
+  <label for="responseType">Response Type:</label>
+  <select id="responseType" name="responseType">
+    <option value="streaming">Streaming</option>
+    <option value="non-streaming">Non-Streaming</option>
+  </select><br><br>
+  
+  <button onclick="testConnection()">Test Connection</button>
+  <button onclick="clearOutput()">Clear Output</button>
+  
+  <div id="output"></div>
+  <script src="testConnection.js"></script>
+</body>
+</html>
