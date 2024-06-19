@@ -1,12 +1,18 @@
-document.getElementById('send-button').addEventListener('click', async () => {
+document.getElementById('send-button').addEventListener('click', sendMessage);
+document.getElementById('user-input').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    sendMessage();
+  }
+});
+
+function sendMessage() {
   const userInput = document.getElementById('user-input').value;
   if (userInput) {
     displayMessage('User', userInput);
-    const response = await getResponseFromLLM(userInput);
-    displayMessage('Bot', response);
+    getResponseFromLLM(userInput);
     document.getElementById('user-input').value = '';
   }
-});
+}
 
 function displayMessage(sender, message) {
   const messagesContainer = document.getElementById('messages');
