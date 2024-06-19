@@ -5,7 +5,7 @@
 </head>
 <body>
   <div id="chat-container">
-    <h1>LLM Chat Interface</h1>
+    <h1>Browser Assistant</h1>
     
     <label for="llmServer">LLM Server URL:</label>
     <input type="text" id="llmServer" name="llmServer" value="http://localhost:11434"><br><br>
@@ -19,6 +19,9 @@
       <option value="non-streaming">Non-Streaming</option>
     </select><br><br>
     
+    <label for="readPage">Include Page Text:</label>
+    <input type="checkbox" id="readPage"><br><br>
+    
     <div id="messages"></div>
     
     <div id="input-container">
@@ -26,7 +29,8 @@
       <button id="send-button">Send</button>
     </div>
     
-    <button id="clear-button">Clear Chat</button>
+    <button id="clear-button">Clear Text</button>
+    <button id="capture-button">Capture Screenshot</button>
   </div>
   <script src="sidebar.js"></script>
 </body>
