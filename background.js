@@ -14,3 +14,14 @@ browser.runtime.onInstalled.addListener(() => {
     }
   });
   
+  // Toggle sidebar visibility
+  let isSidebarOpen = false;
+
+  browser.browserAction.onClicked.addListener(() => {
+    if (isSidebarOpen) {
+      browser.sidebarAction.close();
+    } else {
+      browser.sidebarAction.open();
+    }
+    isSidebarOpen = !isSidebarOpen;
+  });

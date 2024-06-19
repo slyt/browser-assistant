@@ -1,20 +1,21 @@
 {
     "manifest_version": 2,
-    "name": "Page Reader & Chatbot",
+    "name": "Browser Assistant",
     "version": "1.0",
     "description": "Reads the text on the current page and answers questions using a locally hosted LLM.",
     "permissions": [
       "activeTab",
       "storage",
       "http://*/",
-      "https://*/"
+      "https://*/",
+      "sidebar_action"
     ],
     "sidebar_action": {
       "default_panel": "sidebar/sidebar.html",
       "default_icon": {
-        "48": "icons/icon-48.png"
+        "48": "icons/browser_assistant_logo.png"
       },
-      "default_title": "Page Reader & Chatbot"
+      "default_title": "Browser Assitant"
     },
     "background": {
       "scripts": ["background.js"]
@@ -24,6 +25,11 @@
         "matches": ["<all_urls>"],
         "js": ["content_script.js"]
       }
-    ]
+    ],
+    "browser_action": {
+    "default_icon": {
+      "48": "icons/hide_show_icon.png"
+    },
+    "default_title": "Show/Hide Sidebar"
   }
-  
+}
