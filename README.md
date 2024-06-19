@@ -4,9 +4,10 @@ An AI browser assistent addon for Firefox that can read the text on the screen a
 
 ## TODO
 - [x] Talk to Ollama
-- [ ] Send text on screen as part of input context
+- [x] Send text on screen as part of input context
 - [ ] Use vision model to dynamically generate enriched alt text for images to be sent as text to the input context.
-- [ ] Make model and endpoint configurable
+- [x] Make model and endpoint configurable
+- [ ] Use [langchain](https://python.langchain.com/v0.2/docs/introduction/) to chunk and embed the page for real-time RAG
 
 
 ## Loading the extension in Firefox
