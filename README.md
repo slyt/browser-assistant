@@ -1,6 +1,6 @@
-# browser-assistent
+# browser-assistant
 
-An AI browser assistent addon for Firefox that can read the text on the screen and have a chat about it. Tested with LLM backend [Ollama](https://github.com/ollama/ollama) assumed to be hosted at `http://localhost:11434`.
+An AI browser assistant addon for Firefox that can read the text on the screen and have a chat about it. Tested with LLM backend [Ollama](https://github.com/ollama/ollama) assumed to be hosted at `http://localhost:11434`.
 
 ![](image.png)
 
